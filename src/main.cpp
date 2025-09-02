@@ -1,6 +1,32 @@
 import "base.h";
-import std;
 import gl;
+
+static float update_frame_stats(SDL_Window* window, const char* name) {
+  static double previous_time = -1.0;
+  static double header_refresh_time = 0.0;
+  static int num_frames = 0;
+
+  if (previous_time < 0.0) {
+    previous_time = SDL_NS_TO_SECONDS(static_cast<double>(SDL_GetTicksNS()));
+    header_refresh_time = previous_time;
+  }
+
+  const double time = SDL_NS_TO_SECONDS(static_cast<double>(SDL_GetTicksNS()));
+  const float delta_time = static_cast<float>(time - previous_time);
+  previous_time = time;
+
+  if ((time - header_refresh_time) >= 1.0) {
+    const double fps = num_frames / (time - header_refresh_time);
+    const double ms = (1.0 / fps) * 1000.0;
+    char header[128];
+    SDL_snprintf(header, sizeof(header), "[%.1f fps  %.3f ms] %s", fps, ms, name);
+    SDL_SetWindowTitle(window, header);
+    header_refresh_time = time;
+    num_frames = 0;
+  }
+  num_frames++;
+  return delta_time;
+}
 
 int main() {
   SDL_Init(SDL_INIT_VIDEO);
@@ -18,16 +44,17 @@ int main() {
 
   SDL_ShowWindow(window);
 
-  SDL_Log("GL version: %s", (const char*)glGetString(GL_VERSION));
-  SDL_Log("GL renderer: %s", (const char*)glGetString(GL_RENDERER));
-  SDL_Log("GL vendor: %s", (const char*)glGetString(GL_VENDOR));
+  SDL_Log("GL version: %s", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+  SDL_Log("GL renderer: %s", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+  SDL_Log("GL vendor: %s", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
 
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
 
   const float window_scale = SDL_GetWindowDisplayScale(window);
-  ImGui::GetIO().Fonts->AddFontFromFileTTF("content/Roboto-Medium.ttf", SDL_floorf(15.0f * window_scale));
+  ImGui::GetIO().Fonts->AddFontFromFileTTF("content/Roboto-Medium.ttf", SDL_floorf(12.0f * window_scale));
   ImGui::GetStyle().ScaleAllSizes(window_scale);
+  ImGui::GetStyle().FontScaleDpi = window_scale;
 
   glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
 
@@ -52,14 +79,15 @@ int main() {
           if (event.window.windowID == SDL_GetWindowID(window)) running = false;
         } break;
         case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED: {
-          const int viewport_w = event.window.data1;
-          const int viewport_h = event.window.data2;
-          SDL_Log("Window resized: %d x %d", viewport_w, viewport_h);
+          const int w = event.window.data1;
+          const int h = event.window.data2;
+          SDL_Log("Window resized: %d x %d", w, h);
 
-          glViewport(0, 0, viewport_w, viewport_h);
+          glViewport(0, 0, w, h);
         } break;
       }
     }
+    update_frame_stats(window, "blueprints-prototype");
 
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL3_NewFrame();
@@ -81,7 +109,7 @@ int main() {
     ImGui::Render();
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
-    assert(glGetError() == GL_NO_ERROR);
+    SDL_assert(glGetError() == GL_NO_ERROR);
 
     SDL_GL_SwapWindow(window);
   }

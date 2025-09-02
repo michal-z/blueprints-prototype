@@ -18,7 +18,7 @@ export void init() {
 
 #define GET_FUNC(type, name) \
   name = reinterpret_cast<type>(SDL_GL_GetProcAddress(#name)); \
-  assert(name)
+  SDL_assert(name)
 
   GET_FUNC(PFNGLGETSTRINGPROC, glGetString);
   GET_FUNC(PFNGLCLEARCOLORPROC, glClearColor);
