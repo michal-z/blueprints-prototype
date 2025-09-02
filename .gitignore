@@ -1,0 +1,13 @@
+*.pdb
+*.pch
+*.lib
+*.exe
+*.cso
+*.dll
+*.ifc
+*.obj
+*.rdi
+imgui.ini
+
+!SDL.lib
+!SDL.dll

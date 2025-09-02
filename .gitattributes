@@ -1,0 +1,13 @@
+* text=auto
+*.* text eol=crlf
+
+*.exe binary
+*.obj binary
+*.lib binary
+*.pdb binary
+*.dll binary
+*.png binary
+*.flac binary
+*.ttf binary
+
+src/external/** linguist-vendored
