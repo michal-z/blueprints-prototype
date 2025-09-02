@@ -9,5 +9,5 @@
 *.rdi
 imgui.ini
 
-!SDL.lib
-!SDL.dll
+!SDL3.lib
+!SDL3.dll
