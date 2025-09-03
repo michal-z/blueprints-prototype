@@ -48,11 +48,24 @@ int main() {
   SDL_Log("GL renderer: %s", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
   SDL_Log("GL vendor: %s", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
 
+  {
+    const bool has_path_rendering = SDL_GL_ExtensionSupported("GL_NV_path_rendering");
+    const bool has_mesh_shader = SDL_GL_ExtensionSupported("GL_NV_mesh_shader");
+
+    if (has_path_rendering == false || has_mesh_shader == false) {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Unsupported GPU", "Sorry but this application requires modern NVIDIA GPU with latest graphics drivers.", window);
+      SDL_GL_DestroyContext(gl_context);
+      SDL_DestroyWindow(window);
+      SDL_Quit();
+      return 1;
+    }
+  }
+
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
 
+  ImGui::GetIO().Fonts->AddFontFromFileTTF("content/Roboto-Medium.ttf", 15.0f);
   const float window_scale = SDL_GetWindowDisplayScale(window);
-  ImGui::GetIO().Fonts->AddFontFromFileTTF("content/Roboto-Medium.ttf", SDL_floorf(12.0f * window_scale));
   ImGui::GetStyle().ScaleAllSizes(window_scale);
   ImGui::GetStyle().FontScaleDpi = window_scale;
 
