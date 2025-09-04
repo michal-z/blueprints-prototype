@@ -1,6 +1,10 @@
 import "base.h";
 import gl;
 
+#ifdef _WIN32
+extern "C" __declspec(dllexport) unsigned int NvOptimusEnablement = 1;
+#endif
+
 static float update_frame_stats(SDL_Window* window, const char* name) {
   static double previous_time = -1.0;
   static double header_refresh_time = 0.0;
