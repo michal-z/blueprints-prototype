@@ -40,6 +40,7 @@ int main() {
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
   SDL_Window* window = SDL_CreateWindow("blueprints-prototype", 1920, 1080, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE);
+  SDL_SetWindowMinimumSize(window, 400, 400);
 
   SDL_GLContext gl_context = SDL_GL_CreateContext(window);
   SDL_GL_MakeCurrent(window, gl_context);
@@ -97,13 +98,6 @@ int main() {
         } break;
         case SDL_EVENT_WINDOW_CLOSE_REQUESTED: {
           if (event.window.windowID == SDL_GetWindowID(window)) running = false;
-        } break;
-        case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED: {
-          const int w = event.window.data1;
-          const int h = event.window.data2;
-          SDL_Log("Window resized: %d x %d", w, h);
-
-          glViewport(0, 0, w, h);
         } break;
       }
     }

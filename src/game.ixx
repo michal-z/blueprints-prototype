@@ -15,14 +15,26 @@ struct {
 } gstate;
 
 export void init(SDL_Window* window) {
-  SDL_GetWindowSizeInPixels(window, &gstate.viewport_w, &gstate.viewport_h);
   gstate.window = window;
-
-  glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &gstate.msaa_to);
-  glTextureStorage2DMultisample(gstate.msaa_to, msaa_num_sample, GL_RGBA8, gstate.viewport_w, gstate.viewport_h, GL_FALSE);
 }
 
 export void update() {
+  {
+    int w, h;
+    SDL_GetWindowSizeInPixels(gstate.window, &w, &h);
+    if (w != gstate.viewport_w || h != gstate.viewport_h) {
+      glDeleteTextures(1, &gstate.msaa_to);
+      glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &gstate.msaa_to);
+      glTextureStorage2DMultisample(gstate.msaa_to, msaa_num_sample, GL_RGBA8, w, h, GL_FALSE);
+      glViewport(0, 0, w, h);
+
+      gstate.viewport_w = w;
+      gstate.viewport_h = h;
+
+      SDL_Log("Window resized: %d x %d", w, h);
+    }
+  }
+
   ImGui::ShowDemoWindow(nullptr);
 
   glClear(GL_COLOR_BUFFER_BIT);
