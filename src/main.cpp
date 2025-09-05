@@ -1,5 +1,6 @@
 import "base.h";
 import gl;
+import game;
 
 #ifdef _WIN32
 extern "C" __declspec(dllexport) unsigned int NvOptimusEnablement = 1;
@@ -78,6 +79,8 @@ int main() {
   ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
   ImGui_ImplOpenGL2_Init();
 
+  game::init(window);
+
   bool running = true;
   while (running) {
     SDL_Event event;
@@ -110,18 +113,7 @@ int main() {
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::ShowDemoWindow(nullptr);
-
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex2f(-0.5f, -0.5f);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex2f(0.5f, -0.5f);
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex2f(0.0f, 0.5f);
-    glEnd();
+    game::update();
 
     ImGui::Render();
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
@@ -130,6 +122,8 @@ int main() {
 
     SDL_GL_SwapWindow(window);
   }
+
+  game::shutdown();
 
   ImGui_ImplOpenGL2_Shutdown();
   ImGui_ImplSDL3_Shutdown();

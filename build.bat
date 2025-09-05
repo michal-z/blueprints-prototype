@@ -57,6 +57,7 @@ cl %CFLAGS% /exportHeader "src/base.h" /I "src/external" /Fd:"base.pdb"
 ::
 set SRC=^
 src\gl.ixx ^
+src\game.ixx ^
 src\main.cpp
 
 cl ^
