@@ -71,6 +71,8 @@ export void update() {
 }
 
 export void shutdown() {
+  glDeleteTextures(1, &gstate.msaa_to);
+  glDeleteFramebuffers(1, &gstate.msaa_fbo);
 }
 
 } // namespace game

@@ -80,6 +80,8 @@ int main() {
 
   game::init(window);
 
+  SDL_assert(glGetError() == GL_NO_ERROR);
+
   bool running = true;
   while (running) {
     SDL_Event event;
@@ -120,6 +122,8 @@ int main() {
   ImGui_ImplOpenGL2_Shutdown();
   ImGui_ImplSDL3_Shutdown();
   ImGui::DestroyContext();
+
+  SDL_assert(glGetError() == GL_NO_ERROR);
 
   SDL_GL_DestroyContext(gl_context);
   SDL_DestroyWindow(window);
