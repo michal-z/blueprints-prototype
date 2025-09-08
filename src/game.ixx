@@ -38,6 +38,12 @@ export void update() {
       gstate.viewport_w = w;
       gstate.viewport_h = h;
 
+      const float aspect = static_cast<float>(w) / h;
+      const float map_h = 12.0f;
+
+      glMatrixLoadIdentityEXT(GL_PROJECTION);
+      glMatrixOrthoEXT(GL_PROJECTION, -0.5f * map_h * aspect, 0.5f * map_h * aspect, -0.5f * map_h, 0.5f * map_h, -1.0f, 1.0f);
+
       SDL_Log("Window resized: %d x %d", w, h);
     }
   }
@@ -51,19 +57,22 @@ export void update() {
 
   glBegin(GL_TRIANGLES);
   glColor3f(1.0f, 0.0f, 0.0f);
-  glVertex2f(-0.5f, -0.5f);
+  glVertex2f(-1.5f, -1.5f);
   glColor3f(0.0f, 1.0f, 0.0f);
-  glVertex2f(0.5f, -0.5f);
+  glVertex2f(1.5f, -1.5f);
   glColor3f(0.0f, 0.0f, 1.0f);
-  glVertex2f(0.0f, 0.5f);
+  glVertex2f(0.0f, 1.5f);
   glEnd();
 
   glLineWidth(15.0f);
 
   glColor3f(1.0f, 1.0f, 1.0f);
   glBegin(GL_LINES);
-  glVertex2f(-0.5f, -0.5f);
-  glVertex2f(0.75f, 0.35f);
+  glVertex2f(-8.0f, 5.0f);
+  glVertex2f(8.0f, 5.0f);
+
+  glVertex2f(-8.0f, -5.0f);
+  glVertex2f(8.0f, -5.0f);
   glEnd();
 
   glDisable(GL_FRAMEBUFFER_SRGB);
