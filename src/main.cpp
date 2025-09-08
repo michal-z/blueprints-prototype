@@ -36,17 +36,17 @@ static float update_frame_stats(SDL_Window* window, const char* name) {
 int main() {
   SDL_Init(SDL_INIT_VIDEO);
 
+  const float display_scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
+
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-  SDL_Window* window = SDL_CreateWindow("blueprints-prototype", 1920, 1080, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE);
+  SDL_Window* window = SDL_CreateWindow("blueprints-prototype", static_cast<int>(1280 * display_scale), static_cast<int>(720 * display_scale), SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
   SDL_SetWindowMinimumSize(window, 400, 400);
 
   SDL_GLContext gl_context = SDL_GL_CreateContext(window);
   SDL_GL_MakeCurrent(window, gl_context);
   SDL_GL_SetSwapInterval(0);
-
-  SDL_ShowWindow(window);
 
   {
     const bool has_path_rendering = SDL_GL_ExtensionSupported("GL_NV_path_rendering");
@@ -74,8 +74,6 @@ int main() {
   const float window_scale = SDL_GetWindowDisplayScale(window);
   ImGui::GetStyle().ScaleAllSizes(window_scale);
   ImGui::GetStyle().FontScaleDpi = window_scale;
-
-  glClearColor(0.2f, 0.4f, 0.8f, 1.0f);
 
   ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
   ImGui_ImplOpenGL2_Init();
