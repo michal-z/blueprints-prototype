@@ -46,13 +46,7 @@ int main() {
   SDL_GL_MakeCurrent(window, gl_context);
   SDL_GL_SetSwapInterval(0);
 
-  gl::init();
-
   SDL_ShowWindow(window);
-
-  SDL_Log("GL version: %s", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-  SDL_Log("GL renderer: %s", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-  SDL_Log("GL vendor: %s", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
 
   {
     const bool has_path_rendering = SDL_GL_ExtensionSupported("GL_NV_path_rendering");
@@ -66,6 +60,12 @@ int main() {
       return 1;
     }
   }
+
+  gl::init();
+
+  SDL_Log("GL version: %s", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+  SDL_Log("GL renderer: %s", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+  SDL_Log("GL vendor: %s", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
 
   ImGui::CreateContext();
   ImGui::StyleColorsDark();

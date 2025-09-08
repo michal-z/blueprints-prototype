@@ -1,5 +1,6 @@
 export module game;
 import "base.h";
+import std;
 import gl;
 
 namespace game {
@@ -26,6 +27,13 @@ export void update() {
       glDeleteTextures(1, &gstate.msaa_to);
       glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &gstate.msaa_to);
       glTextureStorage2DMultisample(gstate.msaa_to, msaa_num_sample, GL_RGBA8, w, h, GL_FALSE);
+      //glClearTexImage(gstate.msaa_to, 0, GL_RGBA, GL_UNSIGNED_BYTE, std::array{0.0f, 0.0f, 0.0f, 0.0f}.data())
+
+      glDeleteFramebuffers(1, &gstate.msaa_fbo);
+      glCreateFramebuffers(1, &gstate.msaa_fbo);
+      glNamedFramebufferTexture(gstate.msaa_fbo, GL_COLOR_ATTACHMENT0, gstate.msaa_to, 0);
+      glClearNamedFramebufferfv(gstate.msaa_fbo, GL_COLOR, 0, std::array{0.0f, 0.0f, 0.0f, 0.0f}.data());
+
       glViewport(0, 0, w, h);
 
       gstate.viewport_w = w;
