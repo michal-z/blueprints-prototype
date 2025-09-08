@@ -26,7 +26,7 @@ export void update() {
     if (w != gstate.viewport_w || h != gstate.viewport_h) {
       glDeleteTextures(1, &gstate.msaa_to);
       glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &gstate.msaa_to);
-      glTextureStorage2DMultisample(gstate.msaa_to, msaa_num_sample, GL_RGBA8, w, h, GL_FALSE);
+      glTextureStorage2DMultisample(gstate.msaa_to, msaa_num_sample, GL_SRGB8_ALPHA8, w, h, GL_FALSE);
       glClearTexImage(gstate.msaa_to, 0, GL_RGBA, GL_UNSIGNED_BYTE, std::array{0.0f, 0.0f, 0.0f, 0.0f}.data());
 
       glDeleteFramebuffers(1, &gstate.msaa_fbo);
@@ -45,6 +45,7 @@ export void update() {
   ImGui::ShowDemoWindow(nullptr);
 
   glBindFramebuffer(GL_FRAMEBUFFER, gstate.msaa_fbo);
+  glEnable(GL_FRAMEBUFFER_SRGB);
 
   glClearBufferfv(GL_COLOR, 0, std::array{0.2f, 0.4f, 0.8f, 1.0f}.data());
 
@@ -65,6 +66,7 @@ export void update() {
   glVertex2f(0.75f, 0.35f);
   glEnd();
 
+  glDisable(GL_FRAMEBUFFER_SRGB);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   glBlitNamedFramebuffer(gstate.msaa_fbo, 0, 0, 0, gstate.viewport_w, gstate.viewport_h, 0, 0, gstate.viewport_w, gstate.viewport_h, GL_COLOR_BUFFER_BIT, GL_LINEAR);

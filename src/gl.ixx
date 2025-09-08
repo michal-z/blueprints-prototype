@@ -33,6 +33,8 @@ export PFNGLUSEPROGRAMPROC glUseProgram;
 export PFNGLDELETETEXTURESPROC glDeleteTextures;
 export PFNGLPOINTSIZEPROC glPointSize;
 export PFNGLLINEWIDTHPROC glLineWidth;
+export PFNGLENABLEPROC glEnable;
+export PFNGLDISABLEPROC glDisable;
 
 namespace gl {
 
@@ -73,6 +75,8 @@ export void init() {
   GET_FUNC(PFNGLDELETETEXTURESPROC, glDeleteTextures);
   GET_FUNC(PFNGLPOINTSIZEPROC, glPointSize);
   GET_FUNC(PFNGLLINEWIDTHPROC, glLineWidth);
+  GET_FUNC(PFNGLENABLEPROC, glEnable);
+  GET_FUNC(PFNGLDISABLEPROC, glDisable);
 
 #undef GET_FUNC
 }
