@@ -6,6 +6,7 @@ import gl;
 namespace game {
 
 constexpr int msaa_num_sample = 8;
+constexpr float screen_size_y = 12.0f;
 
 struct {
   SDL_Window* window;
@@ -38,11 +39,10 @@ export void update() {
       gstate.viewport_w = w;
       gstate.viewport_h = h;
 
-      const float aspect = static_cast<float>(w) / h;
-      const float map_h = 12.0f;
-
       glMatrixLoadIdentityEXT(GL_PROJECTION);
-      glMatrixOrthoEXT(GL_PROJECTION, -0.5f * map_h * aspect, 0.5f * map_h * aspect, -0.5f * map_h, 0.5f * map_h, -1.0f, 1.0f);
+
+      const float aspect = static_cast<float>(w) / h;
+      glMatrixOrthoEXT(GL_PROJECTION, -0.5f * screen_size_y * aspect, 0.5f * screen_size_y * aspect, -0.5f * screen_size_y, 0.5f * screen_size_y, -1.0f, 1.0f);
 
       SDL_Log("Window resized: %d x %d", w, h);
     }
@@ -65,6 +65,7 @@ export void update() {
   glEnd();
 
   glLineWidth(15.0f);
+  glPointSize(45.0f);
 
   glColor3f(1.0f, 1.0f, 1.0f);
   glBegin(GL_LINES);
@@ -73,6 +74,17 @@ export void update() {
 
   glVertex2f(-8.0f, -5.0f);
   glVertex2f(8.0f, -5.0f);
+  glEnd();
+
+  glBegin(GL_POINTS);
+  glVertex2f(0.0f, 0.0f);
+  {
+    const float aspect = static_cast<float>(gstate.viewport_w) / gstate.viewport_h;
+    glVertex2f(-0.5f * screen_size_y * aspect, -0.5f * screen_size_y);
+    glVertex2f(0.5f * screen_size_y * aspect, -0.5f * screen_size_y);
+    glVertex2f(-0.5f * screen_size_y * aspect, 0.5f * screen_size_y);
+    glVertex2f(0.5f * screen_size_y * aspect, 0.5f * screen_size_y);
+  }
   glEnd();
 
   glDisable(GL_FRAMEBUFFER_SRGB);
